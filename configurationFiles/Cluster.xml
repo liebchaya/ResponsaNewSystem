@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+ <!DOCTYPE page [
+
+<!-- CHAYA HOME -->
+
+<!ENTITY workspace "D:\MyWorkspace">
+<!ENTITY work-dir "C:\SOStatisticsFolder\Surface_Surface\LIN\">
+<!ENTITY tagger-dir "C:\projects_ws\Tagger\">
+<!ENTITY experiment-name "Cluster">
+<!ENTITY out-dir "C:\ResponsaNew\output">
+<!ENTITY index "indexes\unigIndex"> 
+<!ENTITY corpus-folder "C:\ResponsaClean">  
+
+]>
+
+ 
+<configuration>
+
+<module name="Clustering">
+	<param name="index-dir">&work-dir;</param>
+	<param name="tagger-dir">&tagger-dir;</param>
+	<param name="isMila">true</param>
+	<param name="conf-name">AllBest_Best</param>
+	<param name="cluster-all">true</param>
+	<param name="terms-dir">&work-dir;</param>
+	<param name="scorer-type">SUMSCORE</param> <!-- MAXSCORE or AVGSCORE or MAXLENGTH or SUMSCORE or MAXLENGTHLEMMASIZE-->
+	<param name="query-field">TERM_VECTOR</param>
+	<param name="term-index">0</param>
+	<param name="score-index">1</param>
+	<param name="score-threshold">0.0</param>
+	<param name="top-num">50</param>
+	<param name="max-distance">1</param> <!-- for EditDistance use-->
+	<param name="distance-measure">Morph</param> <!-- Morph or Edit-->
+	<param name="morph-type">2</param> <!-- 1 = allLemmas, 2 = best lemma -->
+</module>
+
+</configuration>

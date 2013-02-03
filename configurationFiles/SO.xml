@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+ <!DOCTYPE page [
+
+
+<!-- CHAYA DIRECTORY -->
+
+<!ENTITY main-dir "/home/ir/liebesc/ResponsaNew">
+<!ENTITY experiment-name "SO">
+<!ENTITY out-dir "/home/ir/liebesc/SO-Index/NewStatisticsFolder">   
+
+]>
+
+ 
+<configuration>
+
+<module name="Experiment">
+	<param name="include_vector_extraction">false</param> 
+	<param name="include_vector_truncating">true</param>
+	<param name="include_all_target_representations">true</param>
+	<param name="responsa-dir">&main-dir;</param>
+	<param name="target-term-type">Surface</param>
+	<param name="stat-scorer">fo.scorers.DiceScorer</param>
+	<param name="feature-type">Best</param>
+	<param name="related-term-type">Best</param>
+	<param name="output-dir">&out-dir;</param>
+	<param name="max-vector-length">1000</param>
+	<param name="split-file-num">11</param>
+	<param name="information-file">/home/ir/liebesc/SO-Index/NewStatisticsFolder/Best_Best/featureVector.info</param>
+</module>
+
+
+<module name="logging">
+	<param name="experiment-name">&experiment-name;</param>
+	<param name="main-output-dir">&out-dir;</param>
+	<param name="allow-relative-paths">TRUE</param>
+	<param name="logger-level">INFO</param>
+	<param name="console-logger-level">INFO</param>
+	<param name="log-layout">%d{HH:mm:ss} %p %m%n</param>
+	<param name="run-mode">DEBUG</param>
+	<param name="write-log-file">TRUE</param>
+	<param name="files-to-copy"></param>
+	<param name="files-to-copy-after-run"></param>
+	<param name="show-caller-info">true</param>
+	<param name="folders-to-create">RelatedTerms</param>
+	<param name="__mailer-module">mailer</param>
+	<param name="log-file-max-size">500MB</param>
+</module>
+
+
+</configuration>

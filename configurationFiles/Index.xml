@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+ <!DOCTYPE page [
+
+<!-- QA-SRV
+
+<!ENTITY Workspace "xxx">
+<!ENTITY work-dir "E:\cygwin\home\chaya\ResponsaNew\indexes">
+<!ENTITY experiment-name "IndexTagger">
+<!ENTITY out-dir "E:\cygwin\home\chaya\ResponsaNew\output">
+<!ENTITY index "IndexTagger">
+<!ENTITY corpus-folder "E:\cygwin\home\chaya\ResponsaCorpus">   
+
+-->
+
+<!-- CHAYA HOME -->
+
+<!ENTITY workspace "D:\MyWorkspace">
+<!ENTITY work-dir "C:\ResponsaSys\indexes">
+<!ENTITY experiment-name "modernTrigrams">
+<!ENTITY out-dir "C:\ResponsaSys\output">
+<!ENTITY index "modernJewishNgramsNew"> 
+<!ENTITY corpus-folder "C:\Documents and Settings\HZ\Desktop\ModernJewish">  
+<!-- ENTITY corpus-folder "C:\TestCorpus" -->
+
+]>
+
+ 
+<configuration>
+
+<module name="Experiment">
+	<param name="index-dir">&work-dir;\&index;</param>
+	<param name="__index-dir">C:\TestIndex\&index;</param>
+	<param name="corpus-dir">&corpus-folder;</param>
+	<param name="docReader-class">index.ModernJewishDocReader</param>
+	<param name="__analyzer-class">org.apache.lucene.analysis.hebrew.MilaMorphTagger</param>
+	<param name="analyzer-class">org.apache.lucene.analysis.standard.StandardAnalyzer</param>
+	<param name="__analyzer-class">org.apache.lucene.analysis.WhitespaceAnalyzer</param>
+	<param name="filter-percent">0</param> <!-- filter lemmas with probability less than this percent -->
+</module>
+
+<module name="logging">
+	<param name="experiment-name">&experiment-name;</param>
+	<param name="main-output-dir">&out-dir;</param>
+	<param name="allow-relative-paths">TRUE</param>
+	<param name="logger-level">INFO</param>
+	<param name="console-logger-level">INFO</param>
+	<param name="log-layout">%d{HH:mm:ss} %p %m%n</param>
+	<param name="run-mode">DEBUG</param>
+	<param name="write-log-file">TRUE</param>
+	<param name="files-to-copy"></param>
+	<param name="files-to-copy-after-run"></param>
+	<param name="show-caller-info">true</param>
+	<param name="folders-to-create"></param>
+	<param name="__mailer-module">mailer</param>
+	<param name="log-file-max-size">500MB</param>
+</module>
+
+
+</configuration>
