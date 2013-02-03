@@ -1,6 +1,15 @@
-*.class
+class
+target/
+
 
 # Package Files #
 *.jar
 *.war
 *.ear
+*.svn
+*.zip
+*.rar
+
+# Binary files #
+bin/
+
