@@ -14,14 +14,15 @@ public class SumEvaluationData {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		/**/	File outputDir = new File("C:\\SONewStatisticsFolder");		
+		/**/	File outputDir = new File("C:\\Combined\\CombinedPer");		
 		/**/ 	String clusteringType = "clusters50_SUMSCORE_2";
-		/**/ 	String evalFileName = "eval.txt";
-		BufferedWriter writerSum = new BufferedWriter(new FileWriter(outputDir + "\\" + clusteringType + ".txt"));
-		for( File f: outputDir.listFiles()) {
-			if (f.isDirectory()) {
+		/**/ 	String evalFileName = "evalFinal.txt";
+		BufferedWriter writerSum = new BufferedWriter(new FileWriter(outputDir + "\\" + clusteringType + "COM.txt"));
+//		for( File f: outputDir.listFiles()) {
+//			if (f.isDirectory()&& /* !f.getName().contains("COVER") && !*/ f.getName().contains("LIN")) {
+		File f = new File("C:\\Combined\\CombinedPer");
 				BufferedReader reader = new BufferedReader(new FileReader(f.getAbsolutePath() + "\\" + clusteringType + "\\" + evalFileName) );
-				BufferedWriter writer = new BufferedWriter(new FileWriter(f.getAbsolutePath() + "\\" + clusteringType + "\\relativeRecall15GSum.txt"));
+				BufferedWriter writer = new BufferedWriter(new FileWriter(f.getAbsolutePath() + "\\" + clusteringType + "\\relativeRecall15GSOSum.txt"));
 				String line=reader.readLine();
 				double count = 0, sumR = 0, sumP = 0, sumF1 = 0, sumAP = 0;
 				while(line!=null){
@@ -33,13 +34,25 @@ public class SumEvaluationData {
 					count++;
 					String[] spLine = line.split("\t");
 					System.out.println(line);
-					sumR+=Double.parseDouble(spLine[3]);
-					sumP+=Double.parseDouble(spLine[2]);
+					if(spLine[3].equals("NaN"))
+						sumR+=0;
+					else
+						sumR+=Double.parseDouble(spLine[3]);
+					if(spLine[2].equals("NaN"))
+						sumP+=0;
+					else
+						sumP+=Double.parseDouble(spLine[2]);
+//					sumR+=Double.parseDouble(spLine[3]);
+//					sumP+=Double.parseDouble(spLine[2]);
 					if(spLine[4].equals("NaN"))
 						sumF1+=0;
 					else
 						sumF1+=Double.parseDouble(spLine[4]);
-					sumAP+=Double.parseDouble(spLine[5]);
+					if(spLine[5].equals("NaN"))
+						sumAP+=0;
+					else
+						sumAP+=Double.parseDouble(spLine[5]);
+//					sumAP+=Double.parseDouble(spLine[5]);
 					line = reader.readLine();
 				}
 				System.out.println("Recall sum: " +sumR);
@@ -48,9 +61,9 @@ public class SumEvaluationData {
 		//		writer.write(sumP/(double)count+"\t"+sumR/(double)count+"\t"+sumF1/(double)count+"\t"+sumAP/(double)count+"\n");
 				writer.close();
 				reader.close();
-				//bw.write("\n************************************\n");
-			}
-		}
+//				//bw.write("\n************************************\n");
+//			}
+//		}
 		writerSum.close();
 	}
 

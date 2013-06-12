@@ -3,19 +3,17 @@ package representation;
 
 public class JewishFeatureRepresentation extends FeatureRepresentation{
 
-	public JewishFeatureRepresentation(FeatureType featureType) {
+	public JewishFeatureRepresentation(FeatureType featureType, String modernJewishIndex) {
 		super(featureType);
+		m_modernJewishIndexName = modernJewishIndex;
 	}
 	
-	public JewishFeatureRepresentation(String responsaMainDir,FeatureType featureType){
-		super(responsaMainDir,featureType);
-	}
 	
 	@Override
 	public String getIndexNameByRepresentation() {
-		String indexName = "modernJewishOnly";
 		m_removeMarkedFeatures = false;
-		return m_indexDir+indexName;	
+		return m_modernJewishIndexName;	
 	}
 
+	private String m_modernJewishIndexName;
 }

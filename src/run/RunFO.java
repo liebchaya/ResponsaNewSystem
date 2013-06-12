@@ -25,6 +25,7 @@ import representation.TargetTermRepresentation.TargetTermType;
 import utils.TargetTerm2Id;
 
 import fo.scorers.DiceScorer;
+import fo.scorers.FreqScorer;
 import fo.scorers.StatScorer;
 import fo.scorers.TfIdfScorer;
 import fo.similarity.FeatureVectorExtractor;
@@ -48,13 +49,18 @@ public class RunFO {
 		ConfigurationParams params = conf.getModuleConfiguration("Experiment");
 		
 		String responsaMainDir = params.get("responsa-dir");
+		
+		String modernJewishIndex = params.get("modern-jewish-index");
+		String origTargetTermFile = params.get("orig-target-term-file");
+		String targetTermFile = params.get("target-term-file");
 //		TargetTerm2Id.loadTargetTerm2IdMapping(new File(responsaMainDir+"input\\origQuery.txt"));
-		TargetTerm2Id.loadTargetTerm2IdMapping(new File(responsaMainDir+"input/hozDescQuery.txt"));
+//		TargetTerm2Id.loadTargetTerm2IdMapping(new File(responsaMainDir+"input/hozDescQuery.txt"));
+		TargetTerm2Id.loadTargetTerm2IdMapping(new File(origTargetTermFile));
 		
 		TargetTermType targetType = TargetTermType.valueOf(params.get("target-term-type"));
 //		TargetTermRepresentation targetRp = new TargetTermRepresentation(responsaMainDir,targetType);
 //		TargetTermRepresentation targetRp = new MilaTargetTermRepresentation(responsaMainDir,targetType);
-		TargetTermRepresentation targetRp = new JewishTargetTermRepresentation(responsaMainDir,targetType);
+		TargetTermRepresentation targetRp = new JewishTargetTermRepresentation(targetType,targetTermFile,modernJewishIndex);
 		HashMap<String, ArrayList<ScoreDoc>> targetDocs = targetRp.extractDocsByRepresentation();
 		
 		String scorerClass =params.get("stat-scorer");
@@ -64,13 +70,13 @@ public class RunFO {
 		FeatureType featureType = FeatureType.valueOf(params.get("feature-type"));
 //		FeatureRepresentation featureRp = new FeatureRepresentation(responsaMainDir,featureType);
 //		FeatureRepresentation featureRp = new MilaFeatureRepresentation(responsaMainDir,featureType);
-		FeatureRepresentation featureRp = new JewishFeatureRepresentation(responsaMainDir,featureType);
+		FeatureRepresentation featureRp = new JewishFeatureRepresentation(featureType,modernJewishIndex);
 //		// for accumulative measures
 //		boolean bAccum = false;
 //		if (scorerClass.contains("TfIdf"))
 //			bAccum = true;
 //		FeatureVectorExtractor vectorExtractor = new FeatureVectorExtractor(scorer,featureRp,bAccum);
-		FeatureVectorExtractor2Measures vectorExtractor = new FeatureVectorExtractor2Measures(scorer,new TfIdfScorer(),featureRp);
+		FeatureVectorExtractor2Measures vectorExtractor = new FeatureVectorExtractor2Measures(scorer,new FreqScorer(),featureRp);
 		String outputDir = params.get("output-dir");
 		vectorExtractor.extractTargetTermVectors(targetDocs, targetType, new File(outputDir));
 

@@ -1,22 +1,31 @@
 package clustering;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+//import new_search.IrException;
 
 import morphology.MorphLemmatizer;
 import morphology.MorphLemmatizerException;
 
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.util.OpenBitSet;
+
+import search.QueryGenerator;
+//import search.Searcher;
+//import search.Searcher.IndexType;
+
+
 public class ClusterScorer {
 	public enum ScorerType
 	{
+		SUMSCORE,
 		MAXSCORE,
 		AVGSCORE,
 		MAXLENGTH,
-		SUMSCORE,
-		MAXLENGTHLEMMASIZE,
-		DICE
+		MAXLENGTHLEMMASIZE
 	}
 	
 	public ClusterScorer(Map<String, Double> input, ScorerType type) {
@@ -42,14 +51,14 @@ public class ClusterScorer {
 				maxScore = curScore;
 			sumScore += curScore;
     	}
+    	if (m_type.equals(ScorerType.SUMSCORE)) 
+			score = sumScore;
     	if (m_type.equals(ScorerType.MAXSCORE)) 
 			score = maxScore;
 		else if (m_type.equals(ScorerType.AVGSCORE)) 
 			score = sumScore/cluster.size();
 		else if (m_type.equals(ScorerType.MAXLENGTH)) 
 			score = maxScore*cluster.size();
-		else if (m_type.equals(ScorerType.SUMSCORE)) 
-			score = sumScore;
 		else if (m_type.equals(ScorerType.MAXLENGTHLEMMASIZE)) 
 			score = maxScore*(cluster.size()/(getAllLemmasNum(cluster)+1));
     	return score;
@@ -62,7 +71,24 @@ public class ClusterScorer {
 		return allLemmas.size();
 	}
 	
-	
+//	public Double getDiceScore(Searcher s,QueryGenerator qg, String origQuery, Set<String> cluster) throws IrException, ParseException {
+//		Double score = 0.0;
+//		String clusterQuery = "";
+//		for(String str:cluster) {
+//			if(s.getIndexType()==IndexType.Morph)
+//				clusterQuery = clusterQuery + " " + str + "$";
+//			
+//			clusterQuery = clusterQuery + " " + str;
+//		}
+//		OpenBitSet qbs = s.searchBitSet(qg.generate(origQuery));
+//		double countquery = qbs.cardinality();
+//		OpenBitSet cbs = s.searchBitSet(qg.generate(clusterQuery));
+//		double countcluster = cbs.cardinality();
+//		double jointCount = OpenBitSet.intersectionCount(qbs, cbs);
+//		score = jointCount*2 / (countcluster + countquery);
+//		return score;
+//		
+//	}
 	private Map<String, Double> m_scoreMap = null;
 	private ScorerType m_type = ScorerType.MAXSCORE;
 	

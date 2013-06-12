@@ -1,4 +1,6 @@
 Low frequency treatment:
+1. Expand target terms with morphology prefixes
+   Morphology4TargetTermExp.java
 1. Collect candidates form the documents where he query appears (any ngram form bigram to four gram)
    GenerateNgrams.java
    Generates ngram file with frequencies (.lowfreq), including ngrams of frequency=1

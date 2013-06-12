@@ -93,8 +93,9 @@ public class FeatureVectorExtractor {
 		if(!configDir.exists())
 			configDir.mkdir();
 		for(String target:targetDocs.keySet()){
-			if (targetDocs.get(target).size() == 0)
+			if (targetDocs.get(target).size() == 0 )//|| target==null)
 				continue;
+//			System.out.println(target);
 			File targetFile = new File(configDir + "/" +TargetTerm2Id.getIntDesc(target)+ "_" + m_scorer.getName() + ".txt");
 			if(targetFile.exists()) {
 				System.out.println("Target term file " + targetFile.getName() + " already exist in " + configDir.getAbsolutePath());

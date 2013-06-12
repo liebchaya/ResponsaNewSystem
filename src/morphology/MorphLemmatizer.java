@@ -148,18 +148,39 @@ public class MorphLemmatizer {
 	 */
 	public static Set<String> getMostProbableLemma(String term) throws MorphLemmatizerException {
 		HashSet<String> lemmas = new HashSet<String>();
+		Token token;
+		Anal anal;
 		try { 
-			Token token = m_lex.getTokenAnalysis(term,false,true);	// parameters: token, unknown word analysis, distribution of analyses
-//			Token token = m_lex.getTokenAnalysis(term);	// parameters: token, unknown word analysis, distribution of analyses
-//			if ((token.isUnknown() && term.startsWith("ד")) || (token.getAnals().isEmpty() && term.startsWith("ד")))
-//				token = m_lex.getTokenAnalysis(term.substring(1));
-	//		if(token.getAnals().isEmpty())
-	//			token = m_lex.getTokenAnalysis(term);
-			Anal anal = token.getMostProbableAnal();
-			if(anal != null){
-		        String lemma = anal.getLemma().getBaseformStr();
-		        if(!lemma.equals("unspecified"))
-		            	lemmas.add(lemma);
+			if (term.split(" ").length > 1){ 
+				String multLemma = "";
+				for (String t:term.split(" ")) {
+					token = m_lex.getTokenAnalysis(t,false,true);	// parameters: token, unknown word analysis, distribution of analyses
+					anal = token.getMostProbableAnal();
+					if(anal != null){
+				        String lemma = anal.getLemma().getBaseformStr();
+				        if(!lemma.equals("unspecified"))
+				        	multLemma = multLemma + " " + lemma;	
+				        else
+				        	multLemma = multLemma + " " + t;
+					}
+					else
+						multLemma = multLemma + " " + t;
+				}
+				lemmas.add(multLemma.trim());
+			}
+			else {
+				token = m_lex.getTokenAnalysis(term,false,true);	// parameters: token, unknown word analysis, distribution of analyses
+	//			Token token = m_lex.getTokenAnalysis(term);	// parameters: token, unknown word analysis, distribution of analyses
+	//			if ((token.isUnknown() && term.startsWith("ד")) || (token.getAnals().isEmpty() && term.startsWith("ד")))
+	//				token = m_lex.getTokenAnalysis(term.substring(1));
+		//		if(token.getAnals().isEmpty())
+		//			token = m_lex.getTokenAnalysis(term);
+				anal = token.getMostProbableAnal();
+				if(anal != null){
+			        String lemma = anal.getLemma().getBaseformStr();
+			        if(!lemma.equals("unspecified"))
+			            	lemmas.add(lemma);
+				}
 			}
 		} catch(Exception e) {
 			throw new MorphLemmatizerException("Problem getting all possible lemmas for " + term);

@@ -82,9 +82,10 @@ public class JudgementForEval {
 		for(File f:outputDir.listFiles()) {
 			if (f.isFile()) {
 				LinkedList<WeightedTerm> expTermsList = WeightedTermUtils.loadWTFromFile(f, termsNum, outputDir.getName());
-				if (f.getName().substring(0,f.getName().indexOf("_")).equals("בועות"))
-					System.out.println("בועות");
-				TermsLemmaJudgements termsJudgements = new TermsLemmaJudgements(f.getName().substring(0,f.getName().indexOf("_")),m_judgementsDir);
+				String sep = "_";
+				if (!f.getName().contains("_"))
+					sep = ".";
+				TermsLemmaJudgements termsJudgements = new TermsLemmaJudgements(f.getName().substring(0,f.getName().indexOf(sep)),m_judgementsDir);
 				termsJudgements.append(WeightedTermUtils.convertWTList2StringList(expTermsList));
 				if (termsJudgements.exportJFile()) {
 					System.out.println("Missing judgement in: " + f.getAbsolutePath());

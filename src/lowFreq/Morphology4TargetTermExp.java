@@ -3,7 +3,6 @@ package lowFreq;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,18 +11,27 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.FSDirectory;
 
+/**
+ * Generates common morphology prefixes for target term expressions
+ * @author HZ
+ *
+ */
 public class Morphology4TargetTermExp {
 	
 	public static String[] prefixes = {"מ", "ש", "ה", "ו", "כ", "ל" , "ב", "ומ", "וש", "וה", "וכ", "ול" , "וב"};
 
 	/**
-	 * @param args
-	 * @throws IOException 
+	 * 
+	 * @param targetTermFile - original target terms' list
+	 * @param modernJewishIndex - in order to avoid complex queries with terms that don't appear in the corpus
+	 * @return String - re-formated target terms' file with morphology prefixes
+	 * @throws IOException
 	 */
-	public static void main(String[] args) throws IOException {
-		IndexReader reader = IndexReader.open(FSDirectory.open(new File("C:\\ResponsaSys\\indexes\\modernJewishNgrams")));
-		BufferedReader fileReader = new BufferedReader(new FileReader(new File("C:\\ResponsaSys\\input\\hozDescQuery.txt")));
-		BufferedWriter writer = new BufferedWriter(new FileWriter(new File("C:\\ResponsaSys\\input\\hozMorphQuery.txt")));
+	public static String generateMorphExpFile(String targetTermFile, String modernJewishIndex) throws IOException {
+		IndexReader reader = IndexReader.open(FSDirectory.open(new File(modernJewishIndex)));
+		BufferedReader fileReader = new BufferedReader(new FileReader(targetTermFile));
+		String morphFile = targetTermFile.replace("_orig.txt","_morph.txt");
+		BufferedWriter writer = new BufferedWriter(new FileWriter(morphFile));
 		String line = fileReader.readLine();
 		while (line != null) {
 			String[] tokens = line.split("\t");
@@ -101,13 +109,21 @@ public class Morphology4TargetTermExp {
 						morphExpan = morphExpan + "\t" + term;
 					}
 			}
+			if (ngram.length == 1) { // unigram expression
+				for(String prefix:prefixes) {
+					term = prefix + ngram[0];
+					freq = reader.docFreq(new Term("TERM_VECTOR",term));
+					if (freq > 0)
+						morphExpan = morphExpan + "\t" + term;
+				}
+			}
 			String newLine = line.trim() + "\t" + morphExpan.trim();
 			writer.write(newLine.trim() + "\n");
 			line = fileReader.readLine();
 		}
 		reader.close();
 		writer.close();
-
+		return morphFile;
 	}
 
 }

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import morphology.MorphLemmatizer;
+import morphology.Tagger;
 
 import obj.WeightedTerm;
 
@@ -63,7 +64,7 @@ public class MorphDistancePreprocessing {
 		
 		Map<String,Double> inputTerms = new HashMap<String,Double>();
 		try {
-			File file = new File(m_termsDir + "\\" +queryTerm);
+			File file = new File(m_termsDir + "/" +queryTerm);
 			if (!file.exists()){
 				System.out.println("Missing file: "+ file.getAbsolutePath());
 				return null;
@@ -78,9 +79,10 @@ public class MorphDistancePreprocessing {
 	    	String sep = "_";
 	    	if (!queryTerm.contains(sep))
 	    		sep = ".";
-	    	Set<String> AllLemmas = MorphLemmatizer.getAllPossibleLemmas(queryTerm.substring(0,queryTerm.indexOf(sep)).trim());
-	    	AllLemmas.add(queryTerm.substring(0,queryTerm.indexOf(sep)).trim());
-	    	Set<String> BestLemma = MorphLemmatizer.getMostProbableLemma(queryTerm.substring(0,queryTerm.indexOf(sep)).trim());
+//	    	Set<String> AllLemmas = MorphLemmatizer.getAllPossibleLemmas(queryTerm.substring(0,queryTerm.indexOf(sep)).trim());
+//	    	AllLemmas.add(queryTerm.substring(0,queryTerm.indexOf(sep)).trim());
+//	    	Set<String> BestLemma = MorphLemmatizer.getMostProbableLemma(queryTerm.substring(0,queryTerm.indexOf(sep)).trim());
+	    	Set<String> BestLemma = Tagger.getTaggerLemmas(queryTerm.substring(0,queryTerm.indexOf(sep)).trim());
 	    	BestLemma.add(queryTerm.substring(0,queryTerm.indexOf(sep)).trim());
 	    	
 	    	while(line != null && counter <= m_topNum) {
@@ -97,18 +99,23 @@ public class MorphDistancePreprocessing {
 	    			continue;
 	    		}
 	    		
+//	    		if(orig.trim().split(" ").length < 2){
+//	    			line = reader.readLine();
+//	    			continue;
+//	    		}
+	    		
 	    		if(confName.split("_")[0].equals("Surface")){
 		    		if(orig.trim().equals(queryTerm.substring(0,queryTerm.indexOf(sep)).trim())){
 		    			line = reader.readLine(); 
 		    			continue;
 		    		}
 	    		}
-	    		else if(confName.split("_")[0].equals("All")){
-		    		if(AllLemmas.contains(orig.trim())){
-		    			line = reader.readLine(); 
-		    			continue;
-		    		}
-	    		}
+//	    		else if(confName.split("_")[0].equals("All")){
+//		    		if(AllLemmas.contains(orig.trim())){
+//		    			line = reader.readLine(); 
+//		    			continue;
+//		    		}
+//	    		}
 	    		else if(confName.split("_")[0].equals("Best")){
 		    		if(BestLemma.contains(orig.trim())){
 		    			line = reader.readLine(); 
@@ -130,8 +137,9 @@ public class MorphDistancePreprocessing {
 //					value = qTerm;
 //	    		else {
 	    		value = StringUtils.fixAnnotatedTerm(orig);
-	    		if (orig.split(" ").length>1)
-	    			value = getLessFrequentUnigram(orig);
+	    		// Chaya 02/2013
+//	    		if (orig.split(" ").length>1)
+//	    			value = getLessFrequentUnigram(orig);
 //	    		}
 	    		if (!m_term2Unigram.containsKey(orig))
 	    			m_term2Unigram.put(orig,value);
@@ -140,7 +148,8 @@ public class MorphDistancePreprocessing {
 	    			if (m_morphType == 1)
 	    			 	lemmas = MorphLemmatizer.getAllPossibleLemmas(value);
 	    			else if (m_morphType == 2)
-	    				lemmas = MorphLemmatizer.getMostProbableLemma(value);
+//	    				lemmas = MorphLemmatizer.getMostProbableLemma(value);
+	    				lemmas = Tagger.getTaggerLemmas(value);
 	    			m_dataMap.put(value, lemmas);
 	    		}
 	    		inputTerms.put(orig,score);
@@ -185,7 +194,8 @@ public class MorphDistancePreprocessing {
 	    			if (m_morphType == 1)
 	    			 	lemmas = MorphLemmatizer.getAllPossibleLemmas(value);
 	    			else if (m_morphType == 2)
-	    				lemmas = MorphLemmatizer.getMostProbableLemma(value);
+//	    				lemmas = MorphLemmatizer.getMostProbableLemma(value);
+	    				lemmas = Tagger.getTaggerLemmas(value);
 	    			m_dataMap.put(value, lemmas);
 	    		}
 	    		inputTerms.put(orig,score);
@@ -264,7 +274,8 @@ public class MorphDistancePreprocessing {
 	private Map<String,Set<String>> m_dataMap = null;
 	private Map<String,String> m_term2Unigram = null;
 	protected HashMap<String,Integer> m_unigramsFreq = null;
-	private MorphLemmatizer m_lemmatizer = null;
+//	private MorphLemmatizer m_lemmatizer = null;
+	private Tagger m_tagger = null;
 	private int m_morphType = 1;
 	
 	private int m_termIndex;

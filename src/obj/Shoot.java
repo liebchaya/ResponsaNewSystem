@@ -21,7 +21,7 @@ public class Shoot {
 		engName=eng;
 		hebName=heb;
 		if (id.startsWith("000"))
-			rootDir=shootsDir+"\\"+id+eng;
+			rootDir=shootsDir+"/"+id+eng;
 		else {	rootDir=""; 
 				//System.out.println(i+eng+heb+" - not in corpus!!");
 		}

@@ -10,6 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import morphology.MorphLemmatizer;
+import morphology.MorphLemmatizerException;
+
 import obj.Term;
 import obj.WeightedTerm;
 import utils.StringUtils;
@@ -127,6 +130,23 @@ public class ClusterList {
 		while (line != null) {
 			String [] tokens = line.split("\t");
 			clusters.add(new Cluster(StringUtils.convertStringToSet(tokens[1]), StringUtils.convertStringToSet(tokens[0]), Double.parseDouble(tokens[2])));
+			line = reader.readLine();
+		}
+		reader.close();
+		return clusters;
+	}
+	
+	public static LinkedList<Cluster> loadClusterFromResultFile(File clustersFile) throws IOException, MorphLemmatizerException{
+		LinkedList<Cluster> clusters = new LinkedList<Cluster>();
+		BufferedReader reader = new BufferedReader(new FileReader(clustersFile));
+		String line = reader.readLine();
+		while (line != null) {
+			String [] tokens = line.split("\t");
+			HashSet<String> resSet = StringUtils.convertStringToSet(tokens[0]);
+			Set<String> lemmaSet = new HashSet<String>();
+			if (resSet.size()>0)
+				lemmaSet = MorphLemmatizer.getMostProbableLemma((String) resSet.toArray()[0]);
+			clusters.add(new Cluster(lemmaSet, resSet, Double.parseDouble(tokens[1])));
 			line = reader.readLine();
 		}
 		reader.close();

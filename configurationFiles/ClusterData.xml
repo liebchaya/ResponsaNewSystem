@@ -5,10 +5,10 @@
 <!-- CHAYA HOME -->
 
 <!ENTITY workspace "D:\MyWorkspace">
-<!ENTITY work-dir "C:\Combined\">
+<!ENTITY work-dir "C:\ResponsaSys\output\modernJewishOnlyDiceFreq\">
 <!ENTITY tagger-dir "C:\projects_ws\Tagger\">
 <!ENTITY experiment-name "Cluster">
-<!ENTITY out-dir "C:\Combined\Combined">
+<!ENTITY out-dir "C:\ResponsaSys\output">
 <!ENTITY index "indexes\unigIndex"> 
 <!ENTITY corpus-folder "C:\ResponsaClean">  
 
@@ -18,13 +18,14 @@
 <configuration>
 
 <module name="Clustering">
+	<param name="target-term-orig">/home/ir/liebesc/ResponsaSys/input/targetTerms_orig.txt</param>
 	<param name="index-dir">&work-dir;</param>
 	<param name="tagger-dir">&tagger-dir;</param>
 	<param name="isMila">true</param>
-	<param name="conf-name">Combined</param>
-	<param name="cluster-all">false</param>
+	<param name="conf-name">Surface_Surface</param>
+	<param name="cluster-all">true</param>
+	<param name="file-type">_Data.txt</param>
 	<param name="terms-dir">&work-dir;</param>
-	<param name="file-type">.comb</param>
 	<param name="scorer-type">SUMSCORE</param> <!-- MAXSCORE or AVGSCORE or MAXLENGTH or SUMSCORE or MAXLENGTHLEMMASIZE-->
 	<param name="query-field">TERM_VECTOR</param>
 	<param name="term-index">0</param>

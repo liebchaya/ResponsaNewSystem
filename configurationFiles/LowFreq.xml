@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+
+ <!DOCTYPE page [
+
+
+<!-- CHAYA DIRECTORY -->
+
+<!ENTITY experiment-name "FO">
+<!ENTITY out-dir "C:\\ResponsaSys\\output\\try">   
+
+]>
+
+ 
+<configuration>
+
+<module name="Experiment">
+	<param name="target-term-type">Surface</param>
+	<param name="stat-scorer">fo.scorers.DiceScorer</param>
+	<param name="feature-type">Surface</param>
+	<param name="output-dir">&out-dir;</param>
+	<param name="target-terms-file">C:\ResponsaSys\input\targetTerms_wikiOnly_orig.txt</param>
+	<param name="modern-jewish-index">C:\ResponsaSys\indexes\modernJewishNgrams</param>
+	<param name="modern-index">C:\ResponsaSys\indexes\modernHebrew</param>
+	<param name="old-index">C:\ResponsaSys\indexes\responsaNgrams</param>
+	<param name="old-ngarms-file">C:\responsa</param>
+	<param name="modern-jewish-ngram-file">C:\responsa</param>
+</module>
+
+
+<module name="logging">
+	<param name="experiment-name">&experiment-name;</param>
+	<param name="main-output-dir">&out-dir;</param>
+	<param name="allow-relative-paths">TRUE</param>
+	<param name="logger-level">INFO</param>
+	<param name="console-logger-level">INFO</param>
+	<param name="log-layout">%d{HH:mm:ss} %p %m%n</param>
+	<param name="run-mode">DEBUG</param>
+	<param name="write-log-file">TRUE</param>
+	<param name="files-to-copy"></param>
+	<param name="files-to-copy-after-run"></param>
+	<param name="show-caller-info">true</param>
+	<param name="folders-to-create">RelatedTerms</param>
+	<param name="__mailer-module">mailer</param>
+	<param name="log-file-max-size">500MB</param>
+</module>
+
+
+</configuration>

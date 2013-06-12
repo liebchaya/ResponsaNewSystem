@@ -18,6 +18,7 @@ import org.apache.lucene.queryParser.ParseException;
 
 import morphology.MorphLemmatizer;
 import morphology.MorphLemmatizerException;
+import morphology.Tagger;
 import obj.SortByWeightName;
 import obj.Term;
 import obj.WeightedTerm;
@@ -114,7 +115,7 @@ public class ClusteringGeneration {
 		}
 
 
-	public static void main(String[] args) throws ConfigurationFileDuplicateKeyException, ConfigurationException, MorphLemmatizerException, MorphDistancePrePException, IOException, ParseException {
+	public static void main(String[] args) throws Exception {
 		
 		ConfigurationFile conf = new ConfigurationFile(args[0]);
 		ConfigurationParams clusterParam = conf.getModuleConfiguration("Clustering");
@@ -122,10 +123,12 @@ public class ClusteringGeneration {
 		Boolean isMila = clusterParam.getBoolean("isMila");
 		
 		// initialize the lemmatizer for clustering
-		MorphLemmatizer.initLemmatizer(taggerDir, isMila);
+//		MorphLemmatizer.initLemmatizer(taggerDir, isMila);
+		Tagger.init(taggerDir);
 		
 		String confName = clusterParam.get("conf-name");
 		Boolean bClusterAll = clusterParam.getBoolean("cluster-all");
+		String fileType = clusterParam.get("file-type");
 		String termsDirName = clusterParam.get("terms-dir") + confName;
 		File clsIndexFile = clusterParam.getDirectory("index-dir");
 		int termIndex = clusterParam.getInt("term-index");
@@ -139,14 +142,14 @@ public class ClusteringGeneration {
 		
 		if(!bClusterAll) {
 			ClusteringGeneration clsGen = new ClusteringGeneration(confName, termsDirName, clsIndexFile, clsQueryField, morphType, termIndex, scoreIndex, topNum, scoreThreshold, distMeasure);
-			String clustersDirName = termsDirName + "\\clusters" + topNum + "_" + scoreType + "_" + morphType;
+			String clustersDirName = termsDirName +  "/clusters" + topNum + "_" + scoreType + "_" + morphType;
 			File clustersDir = new File(clustersDirName);
 			if (!clustersDir.exists())
 				clustersDir.mkdir();
 			File termsDir = new File(termsDirName);
 			for (File f:termsDir.listFiles()) {
-				if (f.isFile()) {
-					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(clustersDir +"\\" + f.getName().substring(0,f.getName().indexOf(".")) + ".clusters"), "UTF8"));
+				if (f.isFile() && f.getAbsolutePath().endsWith(fileType)) {
+					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(clustersDir +"/" + f.getName().substring(0,f.getName().indexOf(".")) + ".clusters"), "UTF8"));
 					clsGen.loadTargetTermData(f);
 					LinkedList<Cluster> clusters = clsGen.generateClustering(scoreType);
 					for (Cluster cls:clusters)
@@ -159,20 +162,21 @@ public class ClusteringGeneration {
 			File statDir = new File(clusterParam.get("terms-dir"));
 			for(File confDir:statDir.listFiles()) {
 				System.out.println(confDir);
-				if (confDir.isDirectory()) {
+				if (confDir.isDirectory() && confDir.getName().contains("LIN")) {
 					ClusteringGeneration clsGen = new ClusteringGeneration(confDir.getName(), confDir.getAbsolutePath(), clsIndexFile, clsQueryField, morphType, termIndex, scoreIndex, topNum, scoreThreshold, distMeasure);
 					if (scoreType.equals("DICE")){
-						TargetTerm2Id.loadTargetTerm2IdMapping(new File("C:\\ResponsaNew\\input\\origQuery.txt"));
+						String targetTermFile = clusterParam.get("target-term-orig");
+						TargetTerm2Id.loadTargetTerm2IdMapping(new File(targetTermFile));
 						clsGen.initDiceScorer(confDir.getName());
 					}
-					String clustersDirName = confDir.getAbsolutePath() + "\\clusters" + topNum + "_" + scoreType + "_" + morphType;
+					String clustersDirName = confDir.getAbsolutePath() + "/clusters" + topNum + "_" + scoreType + "_" + morphType;
 					File clustersDir = new File(clustersDirName);
 					if (!clustersDir.exists())
 						clustersDir.mkdir();
 					File termsDir = new File(confDir.getAbsolutePath());
 					for (File f:termsDir.listFiles()) {
-						if (f.isFile()) {
-							BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(clustersDir +"\\" + f.getName().substring(0,f.getName().indexOf(".")) + ".clusters"), "UTF8"));
+						if (f.isFile() && f.getAbsolutePath().endsWith(fileType)) {
+							BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(clustersDir +"/" + f.getName().substring(0,f.getName().indexOf(".")) + ".clusters"), "UTF8"));
 							System.out.println(f.getAbsolutePath());
 							clsGen.loadTargetTermData(f);
 							LinkedList<Cluster> clusters;

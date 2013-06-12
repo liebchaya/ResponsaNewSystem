@@ -29,7 +29,7 @@ public class GoldStandard4RelativeRecall {
 	public void markRelativeGoldStandard(String outputDir, String clusteringType, String clustersFileName) throws IOException{
 		File output = new File(outputDir);
 		for ( File f: output.listFiles() ) {
-			if (f.isDirectory()) {
+			if (f.isDirectory()&& f.getName().contains("LIN")) {
 				File clustersFile = new File(f.getAbsolutePath()+"\\"+clusteringType+"\\"+ clustersFileName);
 				BufferedReader reader = new BufferedReader(new FileReader(clustersFile));
 				String line = reader.readLine();

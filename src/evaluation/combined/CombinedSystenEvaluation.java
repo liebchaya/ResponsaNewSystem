@@ -1,4 +1,4 @@
-package evaluation;
+package evaluation.combined;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,11 +16,12 @@ import morphology.MorphLemmatizerException;
 import clustering.Cluster;
 import clustering.ClusterList;
 import clustering.ClusterFilter;
+import evaluation.Evaluation;
 
 import utils.FileUtils;
 
 
-public class SystenEvaluation {
+public class CombinedSystenEvaluation {
 
 	/**
 	 * @param args
@@ -32,15 +33,15 @@ public class SystenEvaluation {
 	public static void main(String[] args) throws IOException, MorphLemmatizerException, InstantiationException, IllegalAccessException {
 		
 		/**/    String judgementsDir = "C:\\ResponsaNew\\judgements";
-		/**/	File outputDir = new File("C:\\SONewStatisticsFolder");
+		/**/	File outputDir = new File("C:\\Combined\\CombinedPer");
 		/**/	int termsNum = 50;
 		/**/	int clustersNum = 15;
 		
 		/**/ 	String clusteringType = "clusters50_SUMSCORE_2";
-		/**/ 	String clustersFileName = "clustersTop15RGSSO.txt";
+		/**/ 	String clustersFileName = "clustersTop15RGS.txt";
 		
 		JudgementForEval judge = new JudgementForEval(judgementsDir);
-		HashMap<String, HashSet<Cluster>> gsMap = judge.loadRelativeRecallGoldStandard(new File("C:\\relativeRecall15GS_SUMSCORE_SO.txt"), outputDir.getAbsolutePath(), clusteringType, clustersFileName);
+		HashMap<String, HashSet<Cluster>> gsMap = judge.loadRelativeRecallGoldStandard(new File("C:\\relativeRecall15GS_SUMSCORE_All.txt"), outputDir.getAbsolutePath(), clusteringType, clustersFileName);
 		
 		/**/	String taggerDir = "C:\\projects_ws\\Tagger\\";
 		/**/	Boolean isMila = true;
@@ -48,15 +49,15 @@ public class SystenEvaluation {
 		ClusterFilter clsFilter = new ClusterFilter();
 		
 		Evaluation<Cluster> clusterEval = null;
-		BufferedWriter writer = new BufferedWriter(new FileWriter(outputDir+"\\"+"analDataSO.eval"));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(outputDir+"\\"+"analData.eval"));
 		int clusterGS = 0, clusterSum = 0, conflictsNum = 0, lostNum = 0, dupNum = 0;//, missGsNum = 0;
 		writer.write("Configuration\tDisagreement Rate\tLost Rate\tDuplicate Rate\n"); //Missing GoldStandard Rate\n");
 		
-		for(File conf: outputDir.listFiles()) {
-			if (conf.isDirectory() /*&& !conf.getName().contains("COVER")*/ && conf.getName().contains("LIN")) {
+//		for(File conf: outputDir.listFiles()) {
+//			if (conf.isDirectory() && !conf.getName().contains("COVER")) {
 		
-//		File conf = new File("C:\\Combined\\Combined");
-//				System.out.println(conf.getAbsolutePath());
+		File conf = new File("C:\\Combined\\CombinedPer");
+				System.out.println(conf.getAbsolutePath());
 ////				// Verify that there aren't missing terms
 //				if (judge.canEvaluate(conf, termsNum)) {
 //					System.out.println("Cannot evaluate - missing judgements");
@@ -64,8 +65,8 @@ public class SystenEvaluation {
 //				}
 			
 //			
-				BufferedWriter evalWriter = new BufferedWriter(new FileWriter(conf.getAbsolutePath() + "\\" + clusteringType + "\\evalSO.txt"));
-				BufferedWriter topWriter = new BufferedWriter(new FileWriter(conf.getAbsolutePath() + "\\" + clusteringType + "\\clustersTop15RGSSO.txt"));
+				BufferedWriter evalWriter = new BufferedWriter(new FileWriter(conf.getAbsolutePath() + "\\" + clusteringType + "\\evalFinal.txt"));
+				BufferedWriter topWriter = new BufferedWriter(new FileWriter(conf.getAbsolutePath() + "\\" + clusteringType + "\\clustersTop15RGSFinal.txt"));
 				clusterGS = 0; clusterSum = 0; conflictsNum = 0; lostNum = 0; dupNum = 0;// missGsNum = 0;
 				
 				
@@ -81,7 +82,7 @@ public class SystenEvaluation {
 					HashSet<Cluster> relevantClusters = gsMap.get(targetTerm);
 					if (relevantClusters == null) // initiate an empty set
 						relevantClusters = new HashSet<Cluster>();
-					LinkedList<Cluster> responsaClusters = ClusterList.loadClusterFromFile(f);
+					LinkedList<Cluster> responsaClusters = ClusterList.loadClusterFromResultFile(f);
 					
 					clsFilter.createFilterCluster(targetTerm);
 					HashSet<Cluster> relevantClusterJudgesWithSeeds = relevantClusters;
@@ -131,8 +132,8 @@ public class SystenEvaluation {
 				
 				evalWriter.close();
 				topWriter.close();
-				}
-		}
+//				}
+//		}
 		writer.close();
 	}
 		

@@ -28,7 +28,12 @@ public class WeightedTermUtils {
 			BufferedReader reader = new BufferedReader(new FileReader(statFile));
 			String line = reader.readLine();
 			int termsCounter = 0;
-			String targetTerm = statFile.getName().substring(0,statFile.getName().indexOf("_")).trim();
+			System.out.println(statFile.getName());
+			String targetTerm;
+			if (statFile.getName().contains("_"))
+				targetTerm = statFile.getName().substring(0,statFile.getName().indexOf("_")).trim();
+			else
+				targetTerm = statFile.getName().substring(0,statFile.getName().indexOf(".")).trim();
 			Set<String> AllLemmas = MorphLemmatizer.getAllPossibleLemmas(targetTerm);
 	    	AllLemmas.add(targetTerm);
 	    	Set<String> BestLemma = MorphLemmatizer.getMostProbableLemma(targetTerm);
