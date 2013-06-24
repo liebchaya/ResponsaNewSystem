@@ -27,7 +27,7 @@ import utils.TargetTerm2Id;
  * This class is responsible for document extraction by target term representation
  *
  */
-public class JewishTargetTermRepresentation extends  TargetTermRepresentation{
+public class JewishTargetTermRepresentation extends TargetTermRepresentation{
 
 	
 	public JewishTargetTermRepresentation(TargetTermType targetType, String targetTermsFile, String modernJewishIndexName) {
