@@ -13,5 +13,6 @@
 	<classpathentry kind="var" path="localJARS/tagger/tagger.jar"/>
 	<classpathentry kind="var" path="localJARS/lucene/lucene-analyzers-3.1.0.jar"/>
 	<classpathentry kind="var" path="localJARS/patricia-trie-0.6/patricia-trie-0.6.jar"/>
+	<classpathentry kind="var" path="localJARS/javamail-1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

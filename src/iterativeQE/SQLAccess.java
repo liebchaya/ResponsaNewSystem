@@ -1,5 +1,7 @@
 package iterativeQE;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,23 +13,32 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
+import ac.biu.nlp.nlp.general.file.FileUtils;
+
 import obj.Pair;
 import utils.StringUtils;
 
 public class SQLAccess {
 	
-	public SQLAccess() throws ClassNotFoundException, SQLException{
+	/**
+	 * Initialize the connection to the database
+	 * @param databaseName
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	public SQLAccess(String databaseName) throws ClassNotFoundException, SQLException{
 		// This will load the MySQL driver, each DB has its own driver
 	      Class.forName("com.mysql.jdbc.Driver");
+	      m_databaseName = databaseName;
 	      // Setup the connection with the DB
-	      connect = DriverManager
-	          .getConnection("jdbc:mysql://localhost/annotations5000step1?characterEncoding=UTF-8&"
+	      m_connection = DriverManager
+	          .getConnection("jdbc:mysql://localhost/"+m_databaseName+"?characterEncoding=UTF-8&"
 	              + "user=root&password=");
 	}
 	
 	public void Insert(String query, String result,String lemma, String target_term, int generation, int position, int judgement) throws SQLException{
 	      // PreparedStatements can use variables and are more efficient
-	      PreparedStatement preparedStatement = connect
+	      PreparedStatement preparedStatement = m_connection
 	          .prepareStatement("insert into  baseline.annotations values (default, ?, ?, ?, ?, ? , ?, ?)");
 	      // Parameters start with 1
 	      preparedStatement.setString(1, query);
@@ -42,7 +53,7 @@ public class SQLAccess {
 	
 	public void InsertExpansions(String query, String result, String target_term, int generation) throws SQLException{
 	      // PreparedStatements can use variables and are more efficient
-	      PreparedStatement preparedStatement = connect
+	      PreparedStatement preparedStatement = m_connection
 	          .prepareStatement("insert into  annotations5000step1.expansions values (default, ?, ?, ?, ?)");
 	      // Parameters start with 1
 	      preparedStatement.setString(1, query);
@@ -54,7 +65,7 @@ public class SQLAccess {
 	
 	public HashMap<String, Integer> Select(String target_term) throws SQLException{
 		// Select
-	      PreparedStatement preparedStatement = connect
+	      PreparedStatement preparedStatement = m_connection
 	      .prepareStatement("select * from annotations5000step1.annotations where target_term= ? ; ");
 	      preparedStatement.setString(1, target_term);
 	      ResultSet rs = preparedStatement.executeQuery();
@@ -65,7 +76,7 @@ public class SQLAccess {
 	
 	public LinkedList<String> SelectGroups(String target_term) throws SQLException{
 		// Select
-	      PreparedStatement preparedStatement = connect
+	      PreparedStatement preparedStatement = m_connection
 	      .prepareStatement("select * from annotations5000step1.annotations where target_term= ? and judgement>0 ; ");
 	      preparedStatement.setString(1, target_term);
 	      ResultSet rs = preparedStatement.executeQuery();
@@ -76,7 +87,7 @@ public class SQLAccess {
 	
 	public HashMap<Integer,Pair<String, String>> SelectExpansions(int generation) throws SQLException{
 		// Select
-	      PreparedStatement preparedStatement = connect
+	      PreparedStatement preparedStatement = m_connection
 	      .prepareStatement("select * from annotations5000step1.expansions where generation= ? order by id; ");
 	      preparedStatement.setInt(1, generation);
 	      ResultSet rs = preparedStatement.executeQuery();
@@ -138,10 +149,9 @@ public class SQLAccess {
 	
 	
 	
-	 private Connection connect = null;
+	
+	 private Connection m_connection = null;
+	 private String m_databaseName;
 	 
-	 public static void main(String[] args) throws ClassNotFoundException, SQLException{
-		 SQLAccess sql = new SQLAccess();
-	 }
 
 }

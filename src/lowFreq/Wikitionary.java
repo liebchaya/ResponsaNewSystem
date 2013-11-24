@@ -82,34 +82,35 @@ public class Wikitionary {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-//		BufferedReader reader = new BufferedReader(new FileReader("C:\\ResponsaSys\\input\\targetTerms_orig.txt"));
-//		String line = reader.readLine();
+		BufferedReader reader = new BufferedReader(new FileReader("C:\\Documents and Settings\\HZ\\Desktop\\targetTerms_orig.txt"));
+		String line = reader.readLine();
 		Wikitionary wiki = new Wikitionary(new File("C:\\wikiRel"));
-//		HashSet<String> relations = new HashSet<String>();
-//		while(line != null){
-//			LinkedList<Pair<String, Integer>> relList = wiki.getRel(line.split("\t")[1], true, 1);
-//			if (relList.size() >0 ){
-//				System.out.println(line.split("\t")[1]);
-//				for(Pair<String, Integer> pair:relList){
-//					System.out.println(pair.key() + " " + pair.value());
-//					relations.add(pair.key());
-//				}
-//				System.out.println("More relations");
-//				for(String rel:relations){
-//					LinkedList<Pair<String, Integer>> relList2 = wiki.getRel(rel, true, 1);
-//					if (relList2.size() >0 ){
-//						for(Pair<String, Integer> pair:relList2){
-//							if(!relations.contains(pair.key()))
-//								System.out.println(pair.key() + " " + pair.value());
-//						}
-//					}
-//				}
-//			}
-//			relations.clear();
-//			System.out.println(wiki.getRelSet(line.split("\t")[1], true, 1));
+		HashSet<String> relations = new HashSet<String>();
+		while(line != null){
+			LinkedList<Pair<String, Integer>> relList = wiki.getRel(line.split("\t")[1], true, 1);
+			if (relList.size() >0 ){
+				System.out.println(line.split("\t")[1]);
+				for(Pair<String, Integer> pair:relList){
+					System.out.println(pair.key() + " " + pair.value());
+					relations.add(pair.key());
+				}
+				System.out.println("More relations");
+				for(String rel:relations){
+					LinkedList<Pair<String, Integer>> relList2 = wiki.getRel(rel, true, 1);
+					if (relList2.size() >0 ){
+						for(Pair<String, Integer> pair:relList2){
+							if(!relations.contains(pair.key()))
+								System.out.println(pair.key() + " " + pair.value());
+						}
+					}
+				}
+			}
+			relations.clear();
+			System.out.println(wiki.getRelSet(line.split("\t")[1], true, 1));
 			System.out.println(wiki.getRelSet("הרמת כוסית", true, 1));
-//			line = reader.readLine();
-//		}
+			System.out.println(wiki.getRelSet("דיקטטור", true, 1));
+			line = reader.readLine();
+		}
 	}
 		
 	
