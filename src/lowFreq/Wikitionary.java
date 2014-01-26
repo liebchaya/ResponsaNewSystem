@@ -84,7 +84,7 @@ public class Wikitionary {
 	public static void main(String[] args) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader("C:\\Documents and Settings\\HZ\\Desktop\\targetTerms_orig.txt"));
 		String line = reader.readLine();
-		Wikitionary wiki = new Wikitionary(new File("C:\\wikiRel"));
+		Wikitionary wiki = new Wikitionary(new File("C:\\wiki\\test"));//wikiRel"));
 		HashSet<String> relations = new HashSet<String>();
 		while(line != null){
 			LinkedList<Pair<String, Integer>> relList = wiki.getRel(line.split("\t")[1], true, 1);
